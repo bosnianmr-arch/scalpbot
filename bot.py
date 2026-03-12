@@ -215,6 +215,12 @@ def close_trade(price, result):
 def check_trade(prices):
     t = state.get('active')
     if not t: return
+    # Resetuj ako je neispravan format
+    if not isinstance(t, dict) or 'coin' not in t or 'amt' not in t:
+        print(f"[WARN] Neispravan trade format — resetujem aktivni trade")
+        state['active'] = None
+        save_state()
+        return
     price = prices.get(t['coin'])
     if not price: return
     val = t['amt'] * price
